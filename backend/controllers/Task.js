@@ -7,10 +7,10 @@ exports.createTask = async (req, res) => {
         const { title, description, duedate, userId } = req.body;
 
         // Check if required fields are provided
-        if (!title || !description || !duedate || !userId) {
+        if (!title || !description || !duedate ) {
             return res.status(400).json({
                 success: false,
-                message: "Title, Description and duedate  are required"
+                message: "All fields are required  are required"
             });
         }
 
@@ -36,7 +36,7 @@ exports.createTask = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Task created successfully",
-            data: newBlog,
+            data: newTask,
         });
     } catch (error) {
         console.log(error);
@@ -46,6 +46,37 @@ exports.createTask = async (req, res) => {
         });
     }
 }
+
+exports.getTask = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Find the user by ID and populate their tasks
+        const user = await User.findById(userId).populate('tasks');
+
+        // Check if user exists
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        // Return the user's tasks
+        return res.status(200).json({
+            success: true,
+            message: "Tasks fetched successfully",
+            data: user.tasks,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 
 
 

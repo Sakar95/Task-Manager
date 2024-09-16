@@ -11,7 +11,7 @@ const taskSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    dueDate: {
+    duedate: {
         type: Date,
         required: true
     },
@@ -19,7 +19,11 @@ const taskSchema = new mongoose.Schema({
         type: String,
         enum: ['To Do', 'In Progress', 'Done'],
         default: 'To Do'
-    }
+    },
+    // creator:{
+
+    // }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Task", taskSchema);

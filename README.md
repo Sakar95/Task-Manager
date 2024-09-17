@@ -29,9 +29,11 @@ Project Structure
 
 /project-root
   ├── backend
+  
   └── frontend
 
 --------Backend Setup--------
+
 Prerequisites
 Node.js (v14 or higher)
 MongoDB
@@ -44,6 +46,7 @@ Setup
 
 
 --------Frontend Setup--------
+
 Prerequisites
 Node.js (v14 or higher)
 

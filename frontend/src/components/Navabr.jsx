@@ -2,83 +2,84 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../operations/authApi';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-  const { token } = useSelector(state => state.auth); // Get token from Redux state
-  const { user } = useSelector(state => state.profile);
+    const { token } = useSelector(state => state.auth);
+    const { user } = useSelector(state => state.profile);
 
-  useEffect(() => {
-    if (!token) return;
+    useEffect(() => {
+        if (!token) return;
 
-    const decodedToken = jwtDecode(token); // Decode JWT to get expiration
-    const expirationTime = decodedToken.exp * 1000; // Convert exp to milliseconds
+        const decodedToken = jwtDecode(token);
+        const expirationTime = decodedToken.exp * 1000;
 
-    // Check if token has expired
-    if (Date.now() >= expirationTime) {
-      dispatch(logout(navigate)); // Log out the user if token has expired
-      return;
-    }
 
-    // Set up a timer to log out the user when the token expires
-    const remainingTime = expirationTime - Date.now();
-    const timer = setTimeout(() => {
-      dispatch(logout(navigate)); // Log out the user when the token expires
-    }, remainingTime);
+        if (Date.now() >= expirationTime) {
+            dispatch(logout(navigate));
+            return;
+        }
 
-    // Clean up the timer when component unmounts
-    return () => clearTimeout(timer);
-  }, [token, dispatch, navigate]);
+        const remainingTime = expirationTime - Date.now();
+        const timer = setTimeout(() => {
+            dispatch(logout(navigate));
+        }, remainingTime);
 
-  const handleLogout = () => {
-    dispatch(logout(navigate)); // Dispatch logout action
-  };
+        return () => clearTimeout(timer);
+    }, [token, dispatch, navigate]);
 
-  return (
-    <nav className="bg-gray-800 p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <Link to="/" className="text-white text-lg font-bold">
-          Task Manager
-        </Link>
+    const handleLogout = () => {
+        dispatch(logout(navigate));
+    };
 
-        {/* Navigation Links */}
-        <div className="flex space-x-4">
-          {token ? (
-            // If token exists, show Logout button
-            <>
-              <span className="text-white">Hello, {user?.userName || 'User'}</span>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-700"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            // If token doesn't exist, show Login and Signup buttons
-            <>
-              <Link
-                to="/login"
-                className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-700"
-              >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-700"
-              >
-                Signup
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
-    </nav>
-  );
+    return (
+        <nav className="bg-gray-800 p-4 py-3">
+            <div className="container mx-auto flex justify-between items-center">
+
+                <Link to="/" className="text-white text-lg font-bold">
+                    Task Manager
+                </Link>
+
+                <div className="flex space-x-4">
+                    {token ? (
+                        <>
+                            <span className="text-white mt-1">Hello, {user?.userName || 'User'}</span>
+                            <button
+                                onClick={handleLogout}
+                                className='bg-gray-700 text-white hover:bg-gray-600 font-semibold px-3 py-1 rounded duration-300'>
+                            
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link
+                                to="/login"
+
+                            >
+                                <button className='bg-gray-700 text-white hover:bg-gray-600 font-semibold px-3 py-1 mt-1 rounded duration-300'>
+                                    LOGIN
+                                </button>
+
+                            </Link>
+                            <Link
+                                to="/signup"
+
+                            >
+                                <button className='bg-gray-700 text-white hover:bg-gray-600 font-semibold px-3 py-1 mt-1 rounded duration-300'>
+                                    SIGNUP
+                                </button>
+
+                            </Link>
+                        </>
+                    )}
+                </div>
+            </div>
+        </nav>
+    );
 };
 
 export default Navbar;

@@ -6,13 +6,14 @@ import {
   setError,
   updateTask,
   removeTask,
+  setTasks
 } from "../slices/taskSlice";
 
 // Base API URL
 const API_BASE_URL = process.env.REACT_APP_API || "http://localhost:5000";
 
 // Create a new task
-export function createTask(title, description, duedate, userId,token) {
+export function createTask(title, description, duedate,status, userId,token) {
   return async (dispatch) => {
     dispatch(setLoading(true));
     try {
@@ -97,3 +98,20 @@ export function removeTaskAsync(taskId, userId,token) {
     }
   };
 }
+
+export const fetchTasks =(userId,token) => {
+    return async (dispatch) => {
+    if (userId) {
+        dispatch(setLoading(true));
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API}/api/v1/task/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch(setTasks(response.data.data));
+            // console.log(tasks);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            dispatch(setLoading(false));
+        }
+    }
+}
+};

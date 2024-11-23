@@ -40,7 +40,7 @@ const Navbar = () => {
             <div className="container mx-auto flex justify-between items-center">
 
                 <Link to="/" className="text-white text-lg font-bold">
-                    Task Manager
+                    ToDo
                 </Link>
 
                 <div className="flex space-x-4">
